@@ -13,7 +13,8 @@
 import { getServerSession } from 'next-auth/next'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'
+
+import { authOptions } from '@/lib/auth' // <-- UPDATE THIS IMPORT
 import { MessageSquare, BarChart2, Star } from 'lucide-react'
 
 // A simple placeholder card for dashboard items
