@@ -1,13 +1,12 @@
-
 /*
 ================================================================================
-| FILE 2 OF 2: The Single Post Page (Updated for All Dates & Null Safety)      |
+| The Single Post Page (TypeScript Fix)                                        |
 | ---                                                                          |
 | FILE LOCATION: ./nextjs-frontend/src/app/pulsepoint/[slug]/page.tsx          |
 |                                                                              |
 | INSTRUCTIONS:                                                                |
 | 1. Open this existing file.                                                  |
-| 2. Replace its contents with the robust code below.                          |
+| 2. Replace its entire contents with the code below.                          |
 ================================================================================
 */
 
@@ -17,16 +16,9 @@ import { PortableTextComponent } from '@/lib/components/global/PortableTextCompo
 import Image from 'next/image'
 import urlFor from '@/lib/urlFor'
 
-type Props = {
-  params: { slug: string }
-}
-
-async function getPost(slug: string) {
-  const post = await client.fetch(postBySlugQuery, { slug })
-  return post
-}
-
-export default async function PostPage({ params }: Props) {
+// This is the main change. We remove the custom 'Props' type.
+// TypeScript can now correctly infer the types from the function signature.
+export default async function PostPage({ params }: { params: { slug: string } }) {
   const post = await getPost(params.slug)
 
   if (!post) {
@@ -36,7 +28,6 @@ export default async function PostPage({ params }: Props) {
   const imageUrl = post.mainImage ? urlFor(post.mainImage)?.url() : null;
   const authorImageUrl = post.author?.authorImage ? urlFor(post.author.authorImage)?.width(40).height(40).url() : null;
 
-  // Logic to determine which date to display
   const displayDate = post.displayDate || post.publishedAt;
   const wasUpdated = post.updatedAt && new Date(post.updatedAt) > new Date(displayDate);
 
@@ -95,4 +86,10 @@ export default async function PostPage({ params }: Props) {
       </div>
     </article>
   )
+}
+
+// This function can be defined inside the file or kept separate
+async function getPost(slug: string) {
+  const post = await client.fetch(postBySlugQuery, { slug })
+  return post
 }
