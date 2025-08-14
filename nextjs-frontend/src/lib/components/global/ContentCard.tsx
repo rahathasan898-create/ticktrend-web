@@ -1,13 +1,13 @@
 
 /*
 ================================================================================
-| FILE 2 OF 3: The Versatile Content Card Component                            |
+| FILE 2 OF 3: The Content Card Component (Updated with Null Check)            |
 | ---                                                                          |
-| FILE LOCATION: ./nextjs-frontend/src/app/components/global/ContentCard.tsx   |
+| FILE LOCATION: ./nextjs-frontend/src/lib/components/global/ContentCard.tsx   |
 |                                                                              |
 | INSTRUCTIONS:                                                                |
-| 1. Create this new file at the path specified above.                         |
-| 2. Copy and paste the code below into this file.                             |
+| 1. Open this existing file.                                                  |
+| 2. Replace its contents with the robust code below.                          |
 ================================================================================
 */
 
@@ -17,13 +17,23 @@ import urlFor from '@/lib/urlFor'
 
 // A helper function to determine the correct URL path based on content type
 const getUrlPath = (item: any) => {
+  // If a slug doesn't exist, link to the generic page for that content type
+  if (!item.slug) {
+    switch (item._type) {
+      case 'post': return '/pulsepoint';
+      case 'resource': return '/resources';
+      case 'course': return '/vibeschool';
+      default: return '/';
+    }
+  }
+
   switch (item._type) {
     case 'post':
       return `/pulsepoint/${item.slug}`
     case 'resource':
-      return `/resources/${item.slug}` // Assuming a future /resources/[slug] page
+      return `/resources/${item.slug}`
     case 'course':
-      return `/vibeschool/${item.slug}` // Assuming a future /vibeschool/[slug] page
+      return `/vibeschool/${item.slug}`
     default:
       return `/${item.slug}`
   }
@@ -40,13 +50,14 @@ const getTypeLabel = (type: string) => {
 
 export default function ContentCard({ item }: { item: any }) {
   const href = getUrlPath(item);
+  const imageUrl = item.image ? urlFor(item.image)?.url() : null;
 
   return (
     <Link href={href} className="group block bg-white p-4 rounded-xl border border-slate-200 hover:shadow-lg transition-shadow">
       <div className="relative w-full aspect-[16/9] overflow-hidden rounded-lg bg-slate-100">
-        {item.image && (
+        {imageUrl && (
           <Image
-            src={urlFor(item.image).url()}
+            src={imageUrl}
             alt={item.title}
             layout="fill"
             objectFit="cover"
