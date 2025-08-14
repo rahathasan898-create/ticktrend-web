@@ -1,12 +1,9 @@
+
 /*
 ================================================================================
-| The Single Post Page (TypeScript Fix)                                        |
+| FILE 1: PulsePoint Single Page                                               |
 | ---                                                                          |
-| FILE LOCATION: ./nextjs-frontend/src/app/pulsepoint/[slug]/page.tsx          |
-|                                                                              |
-| INSTRUCTIONS:                                                                |
-| 1. Open this existing file.                                                  |
-| 2. Replace its entire contents with the code below.                          |
+| LOCATION: ./src/app/pulsepoint/[slug]/page.tsx                               |
 ================================================================================
 */
 
@@ -16,9 +13,17 @@ import { PortableTextComponent } from '@/lib/components/global/PortableTextCompo
 import Image from 'next/image'
 import urlFor from '@/lib/urlFor'
 
-// This is the main change. We remove the custom 'Props' type.
-// TypeScript can now correctly infer the types from the function signature.
-export default async function PostPage({ params }: { params: { slug: string } }) {
+type Props = {
+  params: { slug: string }
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
+async function getPost(slug: string) {
+  const post = await client.fetch(postBySlugQuery, { slug })
+  return post
+}
+
+export default async function PostPage({ params }: Props) {
   const post = await getPost(params.slug)
 
   if (!post) {
@@ -35,51 +40,26 @@ export default async function PostPage({ params }: { params: { slug: string } })
     <article className="container mx-auto px-4 py-16">
       <div className="max-w-3xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">{post.title}</h1>
-        
         <div className="flex items-center flex-wrap gap-x-4 gap-y-2 mb-8 text-slate-600">
           {post.author && authorImageUrl && (
             <div className="flex items-center space-x-2">
-              <Image
-                src={authorImageUrl}
-                alt={post.author.name}
-                className="rounded-full"
-                width={40}
-                height={40}
-              />
+              <Image src={authorImageUrl} alt={post.author.name} className="rounded-full" width={40} height={40} />
               <span className="font-medium text-slate-800">{post.author.name}</span>
             </div>
           )}
-          
           {post.author && displayDate && <span className="hidden md:inline">•</span>}
-
           {displayDate && (
             <div className="text-sm">
-              <span>
-                {new Date(displayDate).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </span>
-              {wasUpdated && (
-                 <span className="ml-2 text-slate-500">(Updated on {new Date(post.updatedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })})</span>
-              )}
+              <span>{new Date(displayDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+              {wasUpdated && (<span className="ml-2 text-slate-500">(Updated on {new Date(post.updatedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })})</span>)}
             </div>
           )}
         </div>
-
         {imageUrl && (
           <div className="relative w-full aspect-[16/9] mb-8">
-            <Image
-              src={imageUrl}
-              alt={post.title}
-              layout="fill"
-              objectFit="cover"
-              className="rounded-xl"
-            />
+            <Image src={imageUrl} alt={post.title} layout="fill" objectFit="cover" className="rounded-xl" />
           </div>
         )}
-
         <div className="prose prose-lg max-w-none">
           <PortableTextComponent value={post.body} />
         </div>
@@ -88,8 +68,3 @@ export default async function PostPage({ params }: { params: { slug: string } })
   )
 }
 
-// This function can be defined inside the file or kept separate
-async function getPost(slug: string) {
-  const post = await client.fetch(postBySlugQuery, { slug })
-  return post
-}
