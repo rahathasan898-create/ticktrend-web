@@ -10,6 +10,7 @@
 | 3. Copy and paste the code below into the file.                              |
 ================================================================================
 */
+//ff
 "use client";
 import Hero from '@/lib/components/homepage/Hero'
 import FeatureShowcase from '@/lib/components/homepage/FeatureShowcase'

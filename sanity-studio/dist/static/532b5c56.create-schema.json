@@ -1,0 +1,1797 @@
+[
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "mainImage",
+        "type": "image"
+      },
+      {
+        "to": [
+          {
+            "type": "author"
+          }
+        ],
+        "name": "author",
+        "type": "reference"
+      },
+      {
+        "of": [
+          {
+            "to": [
+              {
+                "type": "category"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to category"
+          }
+        ],
+        "name": "categories",
+        "type": "array"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "publishedAt",
+        "type": "datetime",
+        "title": "Published at"
+      },
+      {
+        "name": "updatedAt",
+        "type": "datetime",
+        "title": "Updated at"
+      },
+      {
+        "description": "Optional: If you set this date, it will be shown to visitors instead of the \"Published at\" date.",
+        "name": "displayDate",
+        "type": "datetime",
+        "title": "Display Date Override"
+      },
+      {
+        "rows": 3,
+        "description": "A short summary of the post for SEO and social media previews.",
+        "name": "excerpt",
+        "type": "text"
+      },
+      {
+        "name": "body",
+        "type": "blockContent"
+      },
+      {
+        "of": [
+          {
+            "to": [
+              {
+                "type": "post"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to post"
+          }
+        ],
+        "name": "relatedPosts",
+        "type": "array"
+      },
+      {
+        "fields": [
+          {
+            "initialValue": true,
+            "name": "showPublishDate",
+            "type": "boolean"
+          },
+          {
+            "initialValue": false,
+            "name": "showLastUpdated",
+            "type": "boolean",
+            "title": "Show Last Updated Date"
+          }
+        ],
+        "name": "displayOptions",
+        "type": "object"
+      },
+      {
+        "fields": [
+          {
+            "initialValue": false,
+            "name": "isSponsored",
+            "type": "boolean",
+            "title": "Is this post sponsored?"
+          },
+          {
+            "hidden": "conditional",
+            "name": "sponsorName",
+            "type": "string"
+          },
+          {
+            "validation": [
+              {
+                "rules": [
+                  {
+                    "flag": "uri",
+                    "constraint": {
+                      "options": {
+                        "scheme": [
+                          "/^http$/",
+                          "/^https$/"
+                        ],
+                        "allowRelative": false,
+                        "relativeOnly": false,
+                        "allowCredentials": false
+                      }
+                    }
+                  }
+                ],
+                "level": "error"
+              }
+            ],
+            "hidden": "conditional",
+            "name": "sponsorLink",
+            "type": "url"
+          },
+          {
+            "initialValue": false,
+            "description": "Tick this to automatically show an affiliate disclosure.",
+            "name": "containsAffiliateLinks",
+            "type": "boolean",
+            "title": "Contains affiliate links?"
+          }
+        ],
+        "name": "monetization",
+        "type": "object"
+      },
+      {
+        "initialValue": 0,
+        "readOnly": true,
+        "hidden": true,
+        "name": "viewCount",
+        "type": "number"
+      },
+      {
+        "initialValue": 0,
+        "readOnly": true,
+        "hidden": true,
+        "name": "likeCount",
+        "type": "number"
+      }
+    ],
+    "name": "post",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Visibility / Section",
+              "value": "visibility"
+            },
+            {
+              "title": "Content Format",
+              "value": "format"
+            },
+            {
+              "title": "Topic / Filter",
+              "value": "topic"
+            }
+          ],
+          "layout": "radio"
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "visibility",
+                  "format",
+                  "topic"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "categoryType",
+        "type": "string"
+      },
+      {
+        "description": "Optional: Use this to create sub-categories.",
+        "to": [
+          {
+            "type": "category"
+          }
+        ],
+        "name": "parent",
+        "type": "reference",
+        "title": "Parent Category"
+      },
+      {
+        "rows": 3,
+        "description": "An internal note explaining the purpose of this category.",
+        "name": "description",
+        "type": "text"
+      }
+    ],
+    "name": "category",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "name",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "image",
+        "type": "image"
+      },
+      {
+        "rows": 4,
+        "name": "bio",
+        "type": "text",
+        "title": "Biography"
+      },
+      {
+        "of": [
+          {
+            "type": "socialLink"
+          }
+        ],
+        "name": "socialLinks",
+        "type": "array"
+      }
+    ],
+    "name": "author",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string",
+        "title": "Course Title"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "coverImage",
+        "type": "image"
+      },
+      {
+        "rows": 4,
+        "description": "A summary of the course's learning outcomes.",
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "description": "Add and order the content that makes up this course.",
+        "of": [
+          {
+            "to": [
+              {
+                "type": "lesson"
+              }
+            ],
+            "type": "reference",
+            "name": "lessonReference",
+            "title": "Lesson"
+          },
+          {
+            "to": [
+              {
+                "type": "post"
+              }
+            ],
+            "type": "reference",
+            "name": "postReference",
+            "title": "Post"
+          }
+        ],
+        "name": "lessons",
+        "type": "array"
+      },
+      {
+        "fields": [
+          {
+            "initialValue": false,
+            "name": "isSponsored",
+            "type": "boolean",
+            "title": "Is this entire course sponsored?"
+          },
+          {
+            "hidden": "conditional",
+            "name": "sponsorName",
+            "type": "string"
+          },
+          {
+            "validation": [
+              {
+                "rules": [
+                  {
+                    "flag": "uri",
+                    "constraint": {
+                      "options": {
+                        "scheme": [
+                          "/^http$/",
+                          "/^https$/"
+                        ],
+                        "allowRelative": false,
+                        "relativeOnly": false,
+                        "allowCredentials": false
+                      }
+                    }
+                  }
+                ],
+                "level": "error"
+              }
+            ],
+            "hidden": "conditional",
+            "name": "sponsorLink",
+            "type": "url"
+          }
+        ],
+        "name": "monetization",
+        "type": "object"
+      },
+      {
+        "initialValue": 0,
+        "readOnly": true,
+        "hidden": true,
+        "name": "likeCount",
+        "type": "number"
+      }
+    ],
+    "name": "course",
+    "type": "document",
+    "title": "Course (Playbook)"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string",
+        "title": "Lesson Title"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "initialValue": false,
+        "description": "Tick this box if non-logged-in users can see this lesson.",
+        "name": "isPreview",
+        "type": "boolean",
+        "title": "Is this a free preview lesson?"
+      },
+      {
+        "name": "body",
+        "type": "blockContent"
+      },
+      {
+        "fields": [
+          {
+            "initialValue": false,
+            "name": "isSponsored",
+            "type": "boolean",
+            "title": "Is this lesson sponsored?"
+          },
+          {
+            "hidden": "conditional",
+            "name": "sponsorName",
+            "type": "string"
+          },
+          {
+            "validation": [
+              {
+                "rules": [
+                  {
+                    "flag": "uri",
+                    "constraint": {
+                      "options": {
+                        "scheme": [
+                          "/^http$/",
+                          "/^https$/"
+                        ],
+                        "allowRelative": false,
+                        "relativeOnly": false,
+                        "allowCredentials": false
+                      }
+                    }
+                  }
+                ],
+                "level": "error"
+              }
+            ],
+            "hidden": "conditional",
+            "name": "sponsorLink",
+            "type": "url"
+          },
+          {
+            "initialValue": false,
+            "description": "Tick this to automatically show an affiliate disclosure.",
+            "name": "containsAffiliateLinks",
+            "type": "boolean",
+            "title": "Contains affiliate links?"
+          }
+        ],
+        "name": "monetization",
+        "type": "object"
+      },
+      {
+        "initialValue": 0,
+        "readOnly": true,
+        "hidden": true,
+        "name": "viewCount",
+        "type": "number"
+      }
+    ],
+    "name": "lesson",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string",
+        "title": "Resource Title"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "previewImage",
+        "type": "image"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Downloadable File",
+              "value": "download"
+            },
+            {
+              "title": "Link to Guide",
+              "value": "link"
+            }
+          ],
+          "layout": "radio"
+        },
+        "initialValue": "download",
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "download",
+                  "link"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "resourceType",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "The link to the Canva file, PDF, etc.",
+        "hidden": "conditional",
+        "name": "downloadLink",
+        "type": "url"
+      },
+      {
+        "description": "Select an existing post to link to.",
+        "to": [
+          {
+            "type": "post"
+          }
+        ],
+        "hidden": "conditional",
+        "name": "linkedPost",
+        "type": "reference",
+        "title": "Link to Guide/Post"
+      },
+      {
+        "description": "A rich text description for the resource's landing page.",
+        "name": "body",
+        "type": "blockContent",
+        "title": "Description / Body"
+      },
+      {
+        "options": {
+          "list": [
+            "Public",
+            "Free Member",
+            "Premium"
+          ],
+          "layout": "radio"
+        },
+        "initialValue": "Free Member",
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "Public",
+                  "Free Member",
+                  "Premium"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "accessTier",
+        "type": "string"
+      },
+      {
+        "options": {
+          "layout": "tags"
+        },
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "tags",
+        "type": "array"
+      },
+      {
+        "initialValue": 0,
+        "readOnly": true,
+        "hidden": true,
+        "name": "downloadCount",
+        "type": "number"
+      },
+      {
+        "initialValue": 0,
+        "readOnly": true,
+        "hidden": true,
+        "name": "likeCount",
+        "type": "number"
+      }
+    ],
+    "name": "resource",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string",
+        "title": "Page Title"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "of": [
+          {
+            "type": "promoSection"
+          },
+          {
+            "type": "testimonialSection"
+          },
+          {
+            "type": "logoCloud"
+          },
+          {
+            "type": "textBlock"
+          }
+        ],
+        "name": "body",
+        "type": "array",
+        "title": "Page Sections"
+      }
+    ],
+    "name": "page",
+    "type": "document"
+  },
+  {
+    "of": [
+      {
+        "marks": {
+          "annotations": [
+            {
+              "i18nTitleKey": "inputs.portable-text.annotation.link",
+              "options": {
+                "modal": {
+                  "type": "popover"
+                }
+              },
+              "fields": [
+                {
+                  "validation": [
+                    {
+                      "rules": [
+                        {
+                          "flag": "uri",
+                          "constraint": {
+                            "options": {
+                              "scheme": [
+                                "/^http$/",
+                                "/^https$/",
+                                "/^tel$/",
+                                "/^mailto$/"
+                              ],
+                              "allowRelative": true,
+                              "relativeOnly": false,
+                              "allowCredentials": false
+                            }
+                          }
+                        }
+                      ],
+                      "level": "error"
+                    }
+                  ],
+                  "description": "A valid web, email, phone, or relative link.",
+                  "name": "href",
+                  "type": "url",
+                  "title": "Link"
+                }
+              ],
+              "name": "link",
+              "type": "object"
+            }
+          ],
+          "decorators": [
+            {
+              "value": "strong",
+              "title": "Strong"
+            },
+            {
+              "value": "em",
+              "title": "Italic"
+            },
+            {
+              "value": "code",
+              "title": "Code"
+            },
+            {
+              "value": "underline",
+              "title": "Underline"
+            },
+            {
+              "value": "strike-through",
+              "title": "Strike"
+            }
+          ]
+        },
+        "lists": [
+          {
+            "value": "bullet",
+            "title": "Bullet"
+          },
+          {
+            "value": "number",
+            "title": "Numbered"
+          }
+        ],
+        "styles": [
+          {
+            "value": "normal",
+            "title": "Normal"
+          },
+          {
+            "value": "h2",
+            "title": "H2"
+          },
+          {
+            "value": "h3",
+            "title": "H3"
+          },
+          {
+            "value": "blockquote",
+            "title": "Quote"
+          }
+        ],
+        "of": [],
+        "type": "block"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "type": "image"
+      },
+      {
+        "type": "youtubeEmbed",
+        "title": "YouTube Embed"
+      },
+      {
+        "type": "tiktokEmbed",
+        "title": "TikTok Embed"
+      },
+      {
+        "type": "instagramEmbed"
+      },
+      {
+        "type": "cloudEmbed"
+      },
+      {
+        "type": "proTip",
+        "title": "Pro Tip Block"
+      },
+      {
+        "type": "keyTakeaways",
+        "title": "Key Takeaways Block"
+      },
+      {
+        "type": "toolRecommendation",
+        "title": "Tool Recommendation Block"
+      },
+      {
+        "type": "cta",
+        "title": "Call to Action Block"
+      },
+      {
+        "type": "advertisement",
+        "title": "Advertisement Block"
+      },
+      {
+        "type": "resourceEmbed"
+      },
+      {
+        "type": "postEmbed"
+      },
+      {
+        "type": "downloadableFile",
+        "title": "Downloadable File Block"
+      }
+    ],
+    "name": "blockContent",
+    "type": "array"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "url",
+        "type": "url",
+        "title": "YouTube Video URL"
+      }
+    ],
+    "name": "youtubeEmbed",
+    "type": "object",
+    "title": "YouTube Embed"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "url",
+        "type": "url",
+        "title": "TikTok Video URL"
+      }
+    ],
+    "name": "tiktokEmbed",
+    "type": "object",
+    "title": "TikTok Embed"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "url",
+        "type": "url",
+        "title": "Instagram Post URL"
+      }
+    ],
+    "name": "instagramEmbed",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "options": {
+          "list": [
+            "Image",
+            "Video",
+            "Audio"
+          ],
+          "layout": "radio"
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "Image",
+                  "Video",
+                  "Audio"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "assetType",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "The public URL of the cloud-hosted asset.",
+        "name": "url",
+        "type": "url",
+        "title": "Asset URL"
+      },
+      {
+        "description": "Important for SEO and accessibility (especially for images).",
+        "name": "altText",
+        "type": "string",
+        "title": "Alternative Text"
+      },
+      {
+        "name": "caption",
+        "type": "string"
+      }
+    ],
+    "name": "cloudEmbed",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "rows": 3,
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "tipText",
+        "type": "text"
+      }
+    ],
+    "name": "proTip",
+    "type": "object",
+    "title": "Pro Tip Block"
+  },
+  {
+    "fields": [
+      {
+        "initialValue": "In This Article",
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "takeaways",
+        "type": "array"
+      }
+    ],
+    "name": "keyTakeaways",
+    "type": "object",
+    "title": "Key Takeaways Block"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "toolName",
+        "type": "string"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "toolImage",
+        "type": "image",
+        "title": "Tool Image/Logo"
+      },
+      {
+        "rows": 3,
+        "name": "toolDescription",
+        "type": "text",
+        "title": "Description"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "toolLink",
+        "type": "url",
+        "title": "Link (Affiliate or Standard)"
+      }
+    ],
+    "name": "toolRecommendation",
+    "type": "object",
+    "title": "Tool Recommendation Block"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "headline",
+        "type": "string"
+      },
+      {
+        "rows": 2,
+        "name": "subText",
+        "type": "text",
+        "title": "Sub-text"
+      },
+      {
+        "name": "buttonText",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "buttonLink",
+        "type": "url"
+      }
+    ],
+    "name": "cta",
+    "type": "object",
+    "title": "Call to Action Block"
+  },
+  {
+    "fields": [
+      {
+        "options": {
+          "list": [
+            "Twitter",
+            "LinkedIn",
+            "Instagram",
+            "TikTok",
+            "YouTube"
+          ]
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "Twitter",
+                  "LinkedIn",
+                  "Instagram",
+                  "TikTok",
+                  "YouTube"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "platform",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "url",
+        "type": "url",
+        "title": "URL"
+      }
+    ],
+    "name": "socialLink",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Image Banner",
+              "value": "banner"
+            },
+            {
+              "title": "Ad Network Code",
+              "value": "code"
+            },
+            {
+              "title": "Sponsor Mention",
+              "value": "sponsor"
+            }
+          ],
+          "layout": "radio"
+        },
+        "initialValue": "banner",
+        "name": "adType",
+        "type": "string"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "hidden": "conditional",
+        "name": "adImage",
+        "type": "image",
+        "title": "Ad Image / Banner"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "The destination URL when the ad is clicked.",
+        "hidden": "conditional",
+        "name": "adLink",
+        "type": "url"
+      },
+      {
+        "rows": 4,
+        "description": "Optional: For ad networks like Google AdSense, paste the code here.",
+        "hidden": "conditional",
+        "name": "adCode",
+        "type": "text",
+        "title": "Ad Code Snippet"
+      },
+      {
+        "rows": 2,
+        "description": "A short mention, e.g., \"This section is brought to you by...\"",
+        "hidden": "conditional",
+        "name": "sponsorText",
+        "type": "text"
+      }
+    ],
+    "name": "advertisement",
+    "type": "object",
+    "title": "Advertisement Block"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "to": [
+          {
+            "type": "resource"
+          }
+        ],
+        "name": "resource",
+        "type": "reference",
+        "title": "Resource to Feature"
+      }
+    ],
+    "name": "resourceEmbed",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "to": [
+          {
+            "type": "post"
+          }
+        ],
+        "name": "post",
+        "type": "reference",
+        "title": "Post to Feature"
+      }
+    ],
+    "name": "postEmbed",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "description": "e.g., \"Download the Instagram Hooks Checklist PDF\"",
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "description": "Upload the PDF or other file here.",
+        "name": "file",
+        "type": "file"
+      }
+    ],
+    "name": "downloadableFile",
+    "type": "object",
+    "title": "Downloadable File Block"
+  },
+  {
+    "fields": [
+      {
+        "name": "eyebrowText",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string",
+        "title": "Section Title"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "sectionImage",
+        "type": "image"
+      },
+      {
+        "rows": 4,
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "of": [
+          {
+            "fields": [
+              {
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "presence",
+                        "constraint": "required"
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "name": "text",
+                "type": "string",
+                "title": "Button Text"
+              },
+              {
+                "validation": [
+                  {
+                    "rules": [
+                      {
+                        "flag": "uri",
+                        "constraint": {
+                          "options": {
+                            "scheme": [
+                              "/^http$/",
+                              "/^https$/"
+                            ],
+                            "allowRelative": false,
+                            "relativeOnly": false,
+                            "allowCredentials": false
+                          }
+                        }
+                      },
+                      {
+                        "flag": "presence",
+                        "constraint": "required"
+                      }
+                    ],
+                    "level": "error"
+                  }
+                ],
+                "name": "link",
+                "type": "url",
+                "title": "Button Link"
+              },
+              {
+                "options": {
+                  "list": [
+                    "Primary",
+                    "Secondary"
+                  ]
+                },
+                "initialValue": "Primary",
+                "name": "style",
+                "type": "string"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "name": "buttons",
+        "type": "array",
+        "title": "Buttons (CTAs)"
+      },
+      {
+        "options": {
+          "list": [
+            "Image Left",
+            "Image Right",
+            "Image Top"
+          ],
+          "layout": "radio"
+        },
+        "initialValue": "Image Left",
+        "name": "layout",
+        "type": "string"
+      },
+      {
+        "options": {
+          "list": [
+            "Light",
+            "Dark"
+          ],
+          "layout": "radio"
+        },
+        "initialValue": "Light",
+        "name": "theme",
+        "type": "string"
+      }
+    ],
+    "name": "promoSection",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "rows": 4,
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "quote",
+        "type": "text"
+      },
+      {
+        "name": "authorName",
+        "type": "string"
+      },
+      {
+        "name": "authorTitle",
+        "type": "string",
+        "title": "Author Title / Company"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "authorImage",
+        "type": "image"
+      }
+    ],
+    "name": "testimonialSection",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "description": "e.g., \"Trusted by the world's best creators\"",
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "of": [
+          {
+            "type": "logo"
+          }
+        ],
+        "name": "logos",
+        "type": "array"
+      }
+    ],
+    "name": "logoCloud",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "name": "body",
+        "type": "blockContent",
+        "title": "Text"
+      }
+    ],
+    "name": "textBlock",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "image",
+        "type": "image",
+        "title": "Logo Image"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Important for accessibility. (e.g., \"Logo of Google\")",
+        "name": "alt",
+        "type": "string",
+        "title": "Alternative Text"
+      }
+    ],
+    "name": "logo",
+    "type": "object"
+  }
+]
