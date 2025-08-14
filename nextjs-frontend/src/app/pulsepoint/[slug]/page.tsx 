@@ -1,0 +1,81 @@
+
+/*
+================================================================================
+| FILE 3 OF 3: The Article Page Template                                       |
+| ---                                                                          |
+| FILE LOCATION: ./nextjs-frontend/src/app/pulsepoint/[slug]/page.tsx          |
+|                                                                              |
+| INSTRUCTIONS:                                                                |
+| 1. Create the folder structure and this file at the path specified above.    |
+| 2. Copy and paste the code below into this file.                             |
+================================================================================
+*/
+
+import { client } from '@/lib/sanity.client'
+import { postBySlugQuery } from '@/lib/sanity.queries'
+import { PortableTextComponent } from '@/app/components/global/PortableTextComponent'
+import Image from 'next/image'
+import urlFor from '@/lib/urlFor'
+
+type Props = {
+  params: { slug: string }
+}
+
+async function getPost(slug: string) {
+  const post = await client.fetch(postBySlugQuery, { slug })
+  return post
+}
+
+export default async function PostPage({ params }: Props) {
+  const post = await getPost(params.slug)
+
+  if (!post) {
+    return <div>Post not found.</div>
+  }
+
+  return (
+    <article className="container mx-auto px-4 py-16">
+      <div className="max-w-3xl mx-auto">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4">{post.title}</h1>
+        <div className="flex items-center space-x-4 mb-8 text-slate-600">
+          {post.author && (
+            <div className="flex items-center space-x-2">
+              <Image
+                src={urlFor(post.author.authorImage).width(40).height(40).url()}
+                alt={post.author.name}
+                className="rounded-full"
+                width={40}
+                height={40}
+              />
+              <span className="font-medium text-slate-800">{post.author.name}</span>
+            </div>
+          )}
+          <span>•</span>
+          <span>
+            {new Date(post.publishedAt).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}
+          </span>
+        </div>
+
+        {post.mainImage && (
+          <div className="relative w-full h-96 mb-8">
+            <Image
+              src={urlFor(post.mainImage).url()}
+              alt={post.title}
+              layout="fill"
+              objectFit="cover"
+              className="rounded-xl"
+            />
+          </div>
+        )}
+
+        <div className="prose prose-lg max-w-none">
+          <PortableTextComponent value={post.body} />
+        </div>
+      </div>
+    </article>
+  )
+}
