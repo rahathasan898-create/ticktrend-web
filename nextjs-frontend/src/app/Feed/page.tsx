@@ -1,16 +1,4 @@
-
-
-/*
-================================================================================
-| FILE 3 OF 3: The Feed Page (Updated to Handle No Content)                    |
-| ---                                                                          |
-| FILE LOCATION: ./nextjs-frontend/src/app/feed/page.tsx                       |
-|                                                                              |
-| INSTRUCTIONS:                                                                |
-| 1. Open this existing file.                                                  |
-| 2. Replace its contents with the code below.                                 |
-================================================================================
-*/
+// File Path: src/app/feed/page.tsx
 
 import { client } from '@/lib/sanity.client'
 import { feedQuery } from '@/lib/sanity.queries'
