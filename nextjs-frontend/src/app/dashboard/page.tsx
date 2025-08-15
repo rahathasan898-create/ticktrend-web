@@ -17,8 +17,8 @@ import Link from 'next/link'
 import { authOptions } from '@/lib/auth' // <-- UPDATE THIS IMPORT
 import { MessageSquare, BarChart2, Star } from 'lucide-react'
 
-// A simple placeholder card for dashboard items
 const DashboardCard = ({ title, description, href, icon: Icon }: { title: string, description: string, href: string, icon: React.ElementType }) => (
+  // ... rest of the file is unchanged
   <Link href={href} className="block p-6 bg-white border border-slate-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
     <Icon className="h-8 w-8 text-blue-600 mb-3" />
     <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
