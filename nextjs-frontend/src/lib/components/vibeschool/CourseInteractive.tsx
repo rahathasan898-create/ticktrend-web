@@ -1,102 +1,51 @@
-
-/*
-================================================================================
-| FILE 2 OF 3: The Interactive Course Component (Corrected)                    |
-| ---                                                                          |
-| FILE LOCATION: ./nextjs-frontend/src/lib/components/vibeschool/CourseInteractive.tsx |
-|                                                                              |
-| INSTRUCTIONS:                                                                |
-| 1. Open this existing file.                                                  |
-| 2. Replace its entire contents with the full, corrected code below.          |
-================================================================================
-*/
+// File Path: src/lib/components/vibeschool/CourseInteractive.tsx
+// This component is updated to accept both 'course' and 'lesson' props.
 
 'use client'
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { Lock, PlayCircle, CheckCircle, RefreshCw } from 'lucide-react'
+import { SanityCourse, SanityLesson } from "@/types";
+import Link from "next/link";
+import { PortableTextComponent } from "../global/PortableTextComponent";
 
-// This is a placeholder for a real API call to fetch user progress
-const getMockUserProgress = async (courseId: string) => {
-  console.log(`Fetching progress for course: ${courseId}`);
-  // In the future, this will be: `await fetch('/api/progress?courseId=...')`
-  // For now, we'll simulate a user who has completed the first lesson.
-  return ['lesson_id_1']; 
-};
-
-export default function CourseInteractive({ course }: { course: any }) {
-  const [completedLessons, setCompletedLessons] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProgress = async () => {
-      // FUTURE: Fetch real progress for the logged-in user
-      // const progress = await fetchUserProgress(course._id);
-      const mockProgress = await getMockUserProgress(course._id);
-      setCompletedLessons(mockProgress);
-      setIsLoading(false);
-    };
-
-    fetchProgress();
-  }, [course._id]);
-
-  const handleResetProgress = () => {
-    // FUTURE: Make an API call to reset progress in the database
-    // await fetch('/api/progress', { method: 'DELETE', body: JSON.stringify({ courseId: course._id }) });
-    console.log('Resetting progress...');
-    setCompletedLessons([]);
-  };
-
-  const firstUncompletedLesson = course.lessons.find(
-    (lesson: any) => !completedLessons.includes(lesson._id)
-  );
-
-  return (
-    <div className="bg-slate-50 p-6 rounded-lg border border-slate-200">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-slate-900">Course Content</h2>
-        <button onClick={handleResetProgress} className="text-xs text-slate-500 hover:text-slate-800 flex items-center gap-1">
-          <RefreshCw size={12} />
-          Reset
-        </button>
-      </div>
-
-      {firstUncompletedLesson && (
-        <Link 
-          href={`/vibeschool/${course.slug}/lessons/${firstUncompletedLesson.slug}`}
-          className="block w-full text-center px-6 py-3 mb-4 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition-colors"
-        >
-          {completedLessons.length > 0 ? 'Resume Course' : 'Start Course'}
-        </Link>
-      )}
-
-      <ul className="space-y-3">
-        {course.lessons && course.lessons.map((lesson: any, index: number) => {
-          const isCompleted = completedLessons.includes(lesson._id);
-          return (
-            <li key={lesson._id}>
-              <Link 
-                href={`/vibeschool/${course.slug}/lessons/${lesson.slug}`}
-                className="flex items-center justify-between p-4 rounded-md bg-white border border-slate-200 hover:bg-slate-100 transition-colors"
-              >
-                <div className="flex items-center">
-                  <span className="text-slate-500 font-medium mr-4">{String(index + 1).padStart(2, '0')}</span>
-                  <span className="text-slate-800 font-medium">{lesson.title}</span>
-                </div>
-                {isCompleted ? (
-                  <CheckCircle className="h-5 w-5 text-blue-600" />
-                ) : lesson.isPreview ? (
-                  <PlayCircle className="h-5 w-5 text-green-500" />
-                ) : (
-                  <Lock className="h-5 w-5 text-slate-400" />
-                )}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  );
+// --- FIX: Added 'lesson' to the component's props definition ---
+type Props = {
+    course: SanityCourse;
+    lesson: SanityLesson;
 }
 
+// --- FIX: Destructure both 'course' and 'lesson' from the props ---
+export default function CourseInteractive({ course, lesson }: Props) {
+    return (
+        <div className="flex flex-col lg:flex-row">
+            {/* Sidebar with all lessons */}
+            <aside className="w-full lg:w-1/4 p-4 border-r">
+                <h2 className="text-xl font-bold mb-4">{course.title}</h2>
+                <nav>
+                    <ul>
+                        {course.lessons?.map((l) => (
+                            <li key={l._id}>
+                                <Link 
+                                    href={`/vibeschool/${course.slug.current}/lessons/${l.slug.current}`}
+                                    // Highlight the current lesson
+                                    className={`block p-2 rounded-md ${l.slug.current === lesson.slug.current ? 'bg-blue-500 text-white' : 'hover:bg-gray-100'}`}
+                                >
+                                    {l.title}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
+            </aside>
+
+            {/* Main content area for the current lesson */}
+            <main className="w-full lg:w-3/4 p-8">
+                <header className="mb-8">
+                    <h1 className="text-4xl font-extrabold">{lesson.title}</h1>
+                </header>
+                <div className="prose prose-lg max-w-none">
+                    {lesson.body && <PortableTextComponent value={lesson.body} />}
+                </div>
+            </main>
+        </div>
+    )
+}
