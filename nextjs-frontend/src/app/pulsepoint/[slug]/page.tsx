@@ -6,13 +6,8 @@ import { SanityPost } from "@/types";
 import { notFound } from "next/navigation";
 import Post from "@/lib/components/global/Post";
 import { Metadata } from "next";
-
-// FIX: Using a reusable interface for page props for better readability.
-interface PageProps {
-  params: {
-    slug: string;
-  };
-}
+// FIX: Correctly import the reusable type from its dedicated file.
+import { SingleSlugPageProps } from "@/types/page-props";
 
 // This function generates the static paths for each post at build time.
 export async function generateStaticParams() {
@@ -21,7 +16,8 @@ export async function generateStaticParams() {
 }
 
 // This function generates the metadata for the page head.
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+// FIX: Use the imported SingleSlugPageProps type instead of a local definition.
+export async function generateMetadata({ params }: SingleSlugPageProps): Promise<Metadata> {
   const post = await client.fetch<SanityPost | null>(postBySlugQuery, { slug: params.slug });
   
   if (!post) {
@@ -35,7 +31,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 // This is the main component for the page.
-export default async function PostPage({ params }: PageProps) {
+// FIX: Use the imported SingleSlugPageProps type instead of a local definition.
+export default async function PostPage({ params }: SingleSlugPageProps) {
   const post = await client.fetch<SanityPost | null>(
     postBySlugQuery, 
     { slug: params.slug }, 
