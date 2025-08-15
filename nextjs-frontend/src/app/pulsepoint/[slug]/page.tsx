@@ -6,19 +6,17 @@ import { SanityPost } from "@/types";
 import { notFound } from "next/navigation";
 import Post from "@/lib/components/global/Post";
 import { Metadata } from "next";
-// FIX: Correctly import the reusable type from its dedicated file.
 import { SingleSlugPageProps } from "@/types/page-props";
 
-// This function generates the static paths for each post at build time.
 export async function generateStaticParams() {
   const posts = await client.fetch<{ slug: string }[]>(postPathsQuery);
   return posts.map((post) => ({ slug: post.slug }));
 }
 
-// This function generates the metadata for the page head.
-// FIX: Use the imported SingleSlugPageProps type instead of a local definition.
 export async function generateMetadata({ params }: SingleSlugPageProps): Promise<Metadata> {
-  const post = await client.fetch<SanityPost | null>(postBySlugQuery, { slug: params.slug });
+  // FIX: Await the params object to access its resolved properties
+  const resolvedParams = await params;
+  const post = await client.fetch<SanityPost | null>(postBySlugQuery, { slug: resolvedParams.slug });
   
   if (!post) {
     return {};
@@ -30,13 +28,13 @@ export async function generateMetadata({ params }: SingleSlugPageProps): Promise
   };
 }
 
-// This is the main component for the page.
-// FIX: Use the imported SingleSlugPageProps type instead of a local definition.
 export default async function PostPage({ params }: SingleSlugPageProps) {
+  // FIX: Await the params object to access its resolved properties
+  const resolvedParams = await params;
   const post = await client.fetch<SanityPost | null>(
     postBySlugQuery, 
-    { slug: params.slug }, 
-    { next: { revalidate: 3600 } } // Revalidate the data every hour
+    { slug: resolvedParams.slug }, 
+    { next: { revalidate: 3600 } }
   );
   
   if (!post) {

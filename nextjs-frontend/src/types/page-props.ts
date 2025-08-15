@@ -6,9 +6,9 @@
  * e.g., /blog/[slug]
  */
 export interface SingleSlugPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 /**
@@ -16,8 +16,8 @@ export interface SingleSlugPageProps {
  * e.g., /courses/[slug]/lessons/[lessonSlug]
  */
 export interface NestedSlugPageProps {
-  params: {
+  params: Promise<{
     slug: string;
     lessonSlug: string;
-  };
+  }>;
 }

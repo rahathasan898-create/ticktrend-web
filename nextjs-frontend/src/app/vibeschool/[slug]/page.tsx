@@ -1,33 +1,34 @@
-// File Path: src/app/vibeschool/[slug]/page.tsx
+// File Path: src/app/trendlab/[slug]/page.tsx
 
 import { client } from "@/lib/sanity.client";
-import { courseBySlugQuery, coursePathsQuery } from "@/lib/sanity.queries";
-import { SanityCourse } from "@/types";
+import { trendBySlugQuery, trendPathsQuery } from "@/lib/sanity.queries";
+import { SanityPost } from "@/types";
 import { notFound } from "next/navigation";
-import Course from "@/lib/components/vibeschool/Course";
+import Post from "@/lib/components/global/Post";
 import { Metadata } from "next";
-import { SingleSlugPageProps } from "@/types/page-props"; // Assuming you create this file
+import { SingleSlugPageProps } from "@/types/page-props";
 
-// Generate static paths
 export async function generateStaticParams() {
-    const courses = await client.fetch<{ slug: string }[]>(coursePathsQuery);
-    return courses.map((course) => ({ slug: course.slug }));
+  const trends = await client.fetch<{ slug: string }[]>(trendPathsQuery);
+  return trends.map((trend) => ({ slug: trend.slug }));
 }
 
-// Generate metadata
 export async function generateMetadata({ params }: SingleSlugPageProps): Promise<Metadata> {
-    const course = await client.fetch<SanityCourse | null>(courseBySlugQuery, { slug: params.slug });
-    if (!course) return {};
-    return { title: course.title, description: course.description };
+  // FIX: Await the params object to access its resolved properties
+  const resolvedParams = await params;
+  const trend = await client.fetch<SanityPost | null>(trendBySlugQuery, { slug: resolvedParams.slug });
+  if (!trend) return {};
+  return { title: trend.title, description: trend.excerpt };
 }
 
-// Page component
-export default async function CoursePage({ params }: SingleSlugPageProps) {
-    const course = await client.fetch<SanityCourse | null>(
-        courseBySlugQuery,
-        { slug: params.slug },
-        { next: { revalidate: 3600 } }
-    );
-    if (!course) notFound();
-    return <Course course={course} />;
+export default async function TrendPage({ params }: SingleSlugPageProps) {
+  // FIX: Await the params object to access its resolved properties
+  const resolvedParams = await params;
+  const trend = await client.fetch<SanityPost | null>(
+    trendBySlugQuery,
+    { slug: resolvedParams.slug },
+    { next: { revalidate: 3600 } }
+  );
+  if (!trend) notFound();
+  return <Post post={trend} />;
 }

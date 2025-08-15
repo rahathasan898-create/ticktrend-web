@@ -6,14 +6,12 @@ import { SanityCourse, SanityLesson } from "@/types";
 import { notFound } from "next/navigation";
 import CourseInteractive from "@/lib/components/vibeschool/CourseInteractive";
 import { Metadata } from "next";
-import { NestedSlugPageProps } from "@/types/page-props"; // Assuming you create this file
+import { NestedSlugPageProps } from "@/types/page-props";
 
-// Define the expected shape of the result from our Sanity query
 type LessonQueryResult = SanityCourse & {
   lesson: SanityLesson;
 };
 
-// Generate static paths for all lessons
 export async function generateStaticParams() {
   const courses = await client.fetch<{ slug: string; lessons: string[] }[]>(coursePathsQuery);
   return courses.flatMap((course) =>
@@ -24,9 +22,10 @@ export async function generateStaticParams() {
   );
 }
 
-// Generate metadata for the lesson page
 export async function generateMetadata({ params }: NestedSlugPageProps): Promise<Metadata> {
-  const data = await client.fetch<LessonQueryResult | null>(lessonBySlugsQuery, { courseSlug: params.slug, lessonSlug: params.lessonSlug });
+  // FIX: Await the params object to access its resolved properties
+  const resolvedParams = await params;
+  const data = await client.fetch<LessonQueryResult | null>(lessonBySlugsQuery, { courseSlug: resolvedParams.slug, lessonSlug: resolvedParams.lessonSlug });
   if (!data || !data.lesson) return {};
   return { 
     title: `${data.lesson.title} | ${data.title}`, 
@@ -34,11 +33,12 @@ export async function generateMetadata({ params }: NestedSlugPageProps): Promise
   };
 }
 
-// The main component for the individual lesson page
 export default async function LessonPage({ params }: NestedSlugPageProps) {
+  // FIX: Await the params object to access its resolved properties
+  const resolvedParams = await params;
   const data = await client.fetch<LessonQueryResult | null>(
     lessonBySlugsQuery, 
-    { courseSlug: params.slug, lessonSlug: params.lessonSlug }, 
+    { courseSlug: resolvedParams.slug, lessonSlug: resolvedParams.lessonSlug }, 
     { next: { revalidate: 3600 } }
   );
   
