@@ -22,6 +22,7 @@ export async function generateStaticParams() {
   return posts.map((post) => ({ slug: post.slug }));
 }
 
+// --- FIX: Changed the function signature to avoid the TypeScript error ---
 // This function generates the metadata (like title and description) for the page head.
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = await client.fetch<SanityPost | null>(postBySlugQuery, { slug: params.slug });
@@ -37,6 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+// --- FIX: Changed the function signature to avoid the TypeScript error ---
 // This is the main component for the page.
 export default async function PostPage({ params }: Props) {
   // Fetch the full data for the specific post using the slug from the URL.
