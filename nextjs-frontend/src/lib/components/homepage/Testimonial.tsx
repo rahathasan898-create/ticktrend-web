@@ -10,7 +10,8 @@ const testimonial = {
   author: {
     name: 'Sarah Dole',
     title: 'Full-Time Creator & Course Instructor',
-    image: '/sarah-dole.jpg', // We'll use a placeholder for now
+    // FIX: Replaced the hard-coded image path with a placeholder URL
+    image: 'https://placehold.co/48x48/E2E8F0/475569?text=SD', 
   },
 }
 
@@ -30,10 +31,6 @@ export default function Testimonial() {
                 alt={`Photo of ${testimonial.author.name}`}
                 width={48}
                 height={48}
-                // Placeholder in case the image fails to load
-                onError={(e) => {
-                  e.currentTarget.src = `https://placehold.co/48x48/E2E8F0/475569?text=${testimonial.author.name.charAt(0)}`
-                }}
               />
             </div>
             <div className="mt-4 flex items-center justify-center space-x-3 text-base">
